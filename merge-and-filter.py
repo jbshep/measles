@@ -5,10 +5,12 @@ import pandas as pd
 pop_df = pd.read_csv("data/bogus-pop.csv")
 vax_df = pd.read_csv("data/bogus-vax.csv")
 
+vax_df = vax_df.loc[vax_df["Year"] == 2024]
+
 # Merge them into one data set.
 all_df = pd.merge(pop_df, vax_df, left_on="Geography", right_on="State")
 del all_df["Geography"]
-print(all_df)
+#print(all_df)
 
 # Use new dataset to calculate population density and display
 # state, vaccination rate, and population density.
