@@ -9,6 +9,7 @@ def rename_col(df, old_col, new_col):
 vax_data = pd.read_csv("data/cdc-schoolvax.csv")
 census_data = pd.read_csv("data/census.csv")
 area_data = pd.read_csv("data/kaggle-state-area.csv")
+incident_data = pd.read_csv("data/cdc-incidents.csv")
 
 # Rename the column.
 rename_col(vax_data, "Vaccine/Exemption", "Vax")
@@ -20,6 +21,9 @@ vax_data = vax_data[
     (vax_data["Vax"] == "MMR") &
     (vax_data["School Year"] == "2023-24")
 ]
+incident_data = incident_data[
+    (incident_data["year"] == 2024)
+    ]
 
 vax_data = pd.merge(vax_data, census_data, left_on="State", right_on="NAME")
 del vax_data["NAME"]
@@ -28,6 +32,9 @@ rename_col(vax_data, "POPESTIMATE2024", "Population")
 vax_data = pd.merge(vax_data, area_data, left_on="State", right_on="state")
 del vax_data["state"]
 rename_col(vax_data, "land_area_sq_mi", "Area")
+vax_data = pd.merge(vax_data, incident_data, left_on="State", right_on="geography", how="left")
+del vax_data["geography"]
+rename_col(vax_data, "cases_calendar_year", "Cases")
 
 vax_data.to_csv("data/mmr-vax.csv", index=False)
 
